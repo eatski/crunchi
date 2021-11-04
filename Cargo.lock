@@ -88,6 +88,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "crunchidomain"
+version = "0.1.0"
+
+[[package]]
 name = "exprocess"
 version = "0.1.0"
 dependencies = [
