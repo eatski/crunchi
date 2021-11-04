@@ -34,10 +34,10 @@ jobs:
             ${{ runner.os }}-node-
       - name: Node build
         run: npm ci --production && npx webpack
-      - name: Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PICK_ROLE }}'
-          channelId: live
-          projectId: pick-role
+      # - name: Deploy
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
+      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PICK_ROLE }}'
+      #     channelId: live
+      #     projectId: pick-role
