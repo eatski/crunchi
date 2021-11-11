@@ -88,10 +88,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "crunchidomain"
-version = "0.1.0"
-
-[[package]]
 name = "exprocess"
 version = "0.1.0"
 dependencies = [
@@ -430,6 +426,7 @@ dependencies = [
  "rand 0.8.4",
  "serde",
  "serde_json",
+ "tomachidomain",
  "wasm-bindgen",
  "wasm-logger",
  "webutil",
@@ -516,6 +513,13 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "tomachidomain"
+version = "0.1.0"
+dependencies = [
+ "rand 0.8.4",
 ]
 
 [[package]]
