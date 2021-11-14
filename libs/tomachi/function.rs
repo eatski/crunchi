@@ -1,30 +1,36 @@
-use std::{collections::HashMap, vec};
+use std::{collections::HashMap};
 use rand::{thread_rng, Rng};
 
 use crate::model::*;
 
-fn tpl_to_action(a:OfferingNum,e:OfferingNum) -> Action {
-    let vec = vec![
-        (Character::Adam, a),
-        (Character::Eve, e)
-    ];
-    Action::Offer(vec.into_iter().collect())
-}
-
 fn action_list() -> Vec<(Action, usize)>{
-    vec![
-        (tpl_to_action(OfferingNum::ON1,OfferingNum::ON0),8),
-        (tpl_to_action(OfferingNum::ON0,OfferingNum::ON1),8),
-        (tpl_to_action(OfferingNum::ON2,OfferingNum::ON0),4),
-        (tpl_to_action(OfferingNum::ON1,OfferingNum::ON1),4),
-        (tpl_to_action(OfferingNum::ON0,OfferingNum::ON2),4),
-        (tpl_to_action(OfferingNum::ON3,OfferingNum::ON0),2),
-        (tpl_to_action(OfferingNum::ON2,OfferingNum::ON1),2),
-        (tpl_to_action(OfferingNum::ON1,OfferingNum::ON2),2),
-        (tpl_to_action(OfferingNum::ON0,OfferingNum::ON3),2),
-        (Action::None,4),
-        (Action::Discard,4),
-    ]
+
+    let nums  = [
+        (OfferingNum::ON1,(8,4)),
+        (OfferingNum::ON2,(8,4)),
+        (OfferingNum::ON3,(8,2))
+    ];
+
+    let others = [
+        (Action::Draw,4),
+        (Action::Clean,2),
+        (Action::Prise(PriseKey::Bag,Offering(OfferingTarget::Either,OfferingNum::ON3)),2),
+        (Action::Prise(PriseKey::Chest,Offering(OfferingTarget::Either,OfferingNum::ON2)),2),
+        (Action::Prise(PriseKey::Key,Offering(OfferingTarget::Either,OfferingNum::ON1)),2),
+    ];
+
+    nums
+        .iter()
+        .flat_map(|(num,(spec,eith))| {
+            [
+                (OfferingTarget::Specific(Character::Adam),num.clone(),spec),
+                (OfferingTarget::Specific(Character::Eve),num.clone(),spec),
+                (OfferingTarget::Either,num.clone(),eith)
+            ].map(|(offer,num,card_num)| (Action::Offer(Offering(offer,num)),*card_num))
+        })
+        .chain(others)
+        .collect()
+
 }
 
 fn pick<T,Rn: Rng,R,F: Fn(&T) -> R>(list:&Vec<(T, usize)>,num:usize,mut rng: Rn,finalize: F) -> Vec<R> {
@@ -46,7 +52,7 @@ fn pick<T,Rn: Rng,R,F: Fn(&T) -> R>(list:&Vec<(T, usize)>,num:usize,mut rng: Rn,
 pub fn init_actions(players_num: usize) -> HashMap<Player,Vec<Action>> {
     let list = action_list();
     (0..players_num).map(|player| {
-        (player,pick(&list, 3,thread_rng(),Action::clone))
+        (player,pick(&list, 4,thread_rng(),Action::clone))
     }).collect()
 }
 

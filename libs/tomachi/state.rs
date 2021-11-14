@@ -8,15 +8,15 @@ pub struct PlayingState {
 pub enum CharacterState {
     Alive {
         sins: Vec<Sin>,
-        prises: Vec<PriseType>,
+        prise: bool 
     },
     Arraival {
-        prises: Vec<PriseType>,
+        prises: bool,
     },
     Scrap,
 }
 
 pub enum CharacterLastState {
-    Arraival { prises: Vec<PriseType> },
+    Arraival { prises: bool },
     Scrap,
 }
