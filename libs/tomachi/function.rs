@@ -6,17 +6,22 @@ use crate::model::*;
 fn action_list() -> Vec<(Action, usize)>{
 
     let nums  = [
-        (OfferingNum::ON1,(8,4)),
-        (OfferingNum::ON2,(8,4)),
-        (OfferingNum::ON3,(8,2))
+        (OfferingNum::ON1,(8,3)),
+        (OfferingNum::ON2,(8,3)),
+        (OfferingNum::ON3,(6,2))
     ];
 
     let others = [
-        (Action::Draw,4),
-        (Action::Clean,2),
+        (Action::Rest,3),
+        (Action::Judgment,1),
         (Action::Prise(PriseKey::Bag,Offering(OfferingTarget::Either,OfferingNum::ON3)),2),
         (Action::Prise(PriseKey::Chest,Offering(OfferingTarget::Either,OfferingNum::ON2)),2),
         (Action::Prise(PriseKey::Key,Offering(OfferingTarget::Either,OfferingNum::ON1)),2),
+        (Action::Twist,1),
+        (Action::Meditation,2),
+        (Action::Levy,1),
+        (Action::Restraint,2),
+        (Action::Reveal,1)
     ];
 
     nums
@@ -62,7 +67,7 @@ pub fn pick_action(num: usize) -> Vec<Action> {
 }
 
 #[test]
-pub fn _test_pick() {
+pub fn test_pick() {
     let list = vec![
         ("a",1),
         ("b",2),

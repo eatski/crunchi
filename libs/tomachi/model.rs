@@ -1,4 +1,6 @@
 use std::{fmt::Debug, iter::repeat};
+
+use rand::{Rng, prelude::{IteratorRandom, SliceRandom}};
 pub enum Card {
     Action(Action),
 }
@@ -10,26 +12,61 @@ pub enum PriseKey {
 
 #[derive(Clone,Debug)]
 pub enum Action {
-    Draw,
+    Rest,
     Offer(Offering),
     Prise(PriseKey,Offering),
-    Clean,
-    Robbery,
-    Contrarian
+    Judgment,
+    Twist,
+    Levy,
+    Meditation,
+    Restraint,
+    Reveal
 }
 
-// pub enum Insanity {
-//     /// 沈黙
-//     Silence,
-//     /// 金縛り
-//     Paralysis,
-//     /// どっかから手
-//     Hand,
-//     /// 同調圧力
-//     PeerPressure,
-//     /// 神隠し
-//     SpiritedAway,
-// }
+#[derive(Clone,Debug,PartialEq,Eq)]
+pub enum Strangeness {
+    /// 沈黙
+    Silence,
+    /// 金縛り
+    Paralysis,
+    /// 同調圧力
+    PeerPressure,
+    /// 物忘れ
+    Forgetful,
+    /// 入れ替わり
+    Swap,
+    /// 神隠し
+    SpiritedAway,
+}
+
+impl Strangeness {
+    fn incidence<R: Rng>(&self,mut rng: R) -> bool {
+        rng.gen_bool(1.0 / 3.0)
+    }
+    fn cost(&self) -> usize {
+        match self {
+            Strangeness::Silence => 5,
+            Strangeness::Paralysis => 5,
+            Strangeness::Forgetful => 11,
+            Strangeness::SpiritedAway => 11,
+            Strangeness::Swap => 16,
+            Strangeness::PeerPressure => 16,
+        }
+    }
+    //FIXME
+    pub fn check<R: Rng + Clone>(insanity: usize,mut rng: R) -> Self {
+        let list = [
+            Strangeness::Silence,
+            Strangeness::Paralysis,
+            Strangeness::PeerPressure,
+            Strangeness::Forgetful,
+            Strangeness::Swap,
+            Strangeness::SpiritedAway
+        ];
+
+        list.choose(&mut rng).unwrap().clone()
+    }
+}
 
 #[derive(Clone,Debug)]
 pub enum OfferingNum {

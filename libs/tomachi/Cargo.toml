@@ -9,5 +9,4 @@ path = "mod.rs"
 
 [dependencies]
 rand = { version = "0.8" }
-
-
+rand_pcg = { version = "0.3"}
