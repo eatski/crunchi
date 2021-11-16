@@ -10,3 +10,4 @@ path = "mod.rs"
 [dependencies]
 rand = { version = "0.8" }
 rand_pcg = { version = "0.3"}
+exprocess = { git = "https://github.com/itskihaga/exprocess-rust.git",tag = "v0.0.1"}

@@ -1,8 +1,21 @@
-use std::{fmt::Debug, iter::repeat};
+use std::{collections::{HashSet}, fmt::Debug, iter::repeat};
 
-use rand::{Rng, prelude::{IteratorRandom, SliceRandom}};
+use rand::{Rng, prelude::{SliceRandom}};
 pub enum Card {
     Action(Action),
+}
+
+#[derive(Debug)]
+pub struct Prise {
+    pub keys: HashSet<PriseKey>
+}
+
+impl Prise {
+    pub fn new() -> Self {
+        Self {
+            keys: HashSet::new()
+        }
+    }
 }
 
 #[derive(Clone,Debug)]
@@ -103,12 +116,15 @@ pub enum OfferingTarget {
     Either
 }
 
-pub enum GoalType {
+#[derive(Clone,Debug)]
+pub enum Mission {
     Arrival(Character),
     Matching,
     Scrap(Character),
     Prise,
 }
+
+pub type Contribution = i32;
 
 #[derive(PartialEq,Eq,Hash,Clone,Debug)]
 pub enum Character {
@@ -116,6 +132,9 @@ pub enum Character {
     Eve,
 }
 
+impl Character {
+    pub const ALL: [Self; 2] = [Character::Adam,Character::Eve];
+}
 
 impl Character {
     pub fn debug_str(&self) -> &str {
@@ -126,6 +145,7 @@ impl Character {
     }
 }
 
+#[derive(Debug)]
 pub enum Sin {
     Prise(PriseKey),
     FailedOffering(OfferingNum),
