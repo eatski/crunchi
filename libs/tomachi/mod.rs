@@ -1,6 +1,7 @@
 pub mod model;
 pub mod state;
 pub mod function;
+pub mod io;
 mod settings;
 mod util;
 use std::panic;
@@ -9,56 +10,60 @@ use exprocess::core::ExprocessCore;
 use rand::thread_rng;
 use settings::AppSetting;
 use state::{MissionsNum, PlayingState};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug)]
 pub enum AppState {
-    Blank,
-    Playing(Playing)
+    SetUp,
+    Playing(PlayingState)
 }
 
-#[derive(Debug)]
-pub struct Playing {
-    pub state:PlayingState,
-    pub setting:AppSetting
+pub struct AppStateRoot {
+    pub state: AppState,
+    setting: AppSetting
 }
 
+#[derive(JsonSchema,Serialize,Deserialize)]
 pub enum AppCommand {
     Init(usize,MissionsNum)
 }
 
+#[derive(Clone,Serialize,Deserialize)]
 pub enum AppResult {
-    CreatePlaying(Playing)
+    CreatePlaying(PlayingState)
 }
 
 pub struct AppCore;
 
 impl ExprocessCore for AppCore {
-    type State = AppState;
+    type State = AppStateRoot;
 
     type Command = AppCommand;
 
     type Result = AppResult;
 
     fn init() -> Self::State {
-        AppState::Blank
+        AppStateRoot {
+            setting: AppSetting::new(),
+            state: AppState::SetUp
+        }
     }
 
     fn resolve(prev: &Self::State, command: Self::Command) -> Self::Result {
-        match (prev,command) {
-            (AppState::Blank, AppCommand::Init(players_num,missions_num)) => {
-                let setting = AppSetting::new();
-                AppResult::CreatePlaying(Playing {
-                    state: PlayingState::new(players_num,&missions_num,&setting.actions, &mut thread_rng()),
-                    setting,
-                })
+        match (&prev.state,command) {
+            (AppState::SetUp, AppCommand::Init(players_num,missions_num)) => {
+                AppResult::CreatePlaying(
+                    PlayingState::new(players_num,&missions_num,&prev.setting.actions, &mut thread_rng())
+                )
             },
             (AppState::Playing(_), AppCommand::Init(_,_)) => panic!(),
         }
     }
 
     fn reducer(prev: &mut Self::State, result: Self::Result) {
-        *prev = match (&prev,result) {
-            (AppState::Blank, AppResult::CreatePlaying(playing)) => {
+        prev.state = match (&prev.state,result) {
+            (AppState::SetUp, AppResult::CreatePlaying(playing)) => {
                  AppState::Playing(playing)
             },
             (AppState::Playing(_), AppResult::CreatePlaying(_)) => panic!(),

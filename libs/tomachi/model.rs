@@ -1,11 +1,12 @@
 use std::{collections::{HashSet}, fmt::Debug, iter::repeat};
 
 use rand::{Rng, prelude::{SliceRandom}};
+use serde::{Deserialize, Serialize};
 pub enum Card {
     Action(Action),
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub struct Prise {
     pub keys: HashSet<PriseKey>
 }
@@ -18,12 +19,20 @@ impl Prise {
     }
 }
 
-#[derive(Clone,Debug)]
+#[derive(
+    Clone,
+    Debug,
+    Serialize,
+    Deserialize,
+    Hash,
+    Eq,
+    PartialEq
+)]
 pub enum PriseKey {
     Key,Bag,Chest
 }
 
-#[derive(Clone,Debug)]
+#[derive(Clone,Debug,Serialize,Deserialize)]
 pub enum Action {
     Rest,
     Offer(Offering),
@@ -81,7 +90,7 @@ impl Strangeness {
     }
 }
 
-#[derive(Clone,Debug)]
+#[derive(Clone,Debug,Serialize,Deserialize)]
 pub enum OfferingNum {
     ON1,ON2,ON3,
 }
@@ -96,7 +105,7 @@ impl OfferingNum {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone,Serialize,Deserialize)]
 pub struct Offering(pub OfferingTarget,pub OfferingNum);
 
 impl Debug for Offering {
@@ -110,13 +119,13 @@ impl Debug for Offering {
     }
 }
 
-#[derive(Clone,Debug)]
+#[derive(Clone,Debug,Serialize,Deserialize)]
 pub enum OfferingTarget {
     Specific(Character),
     Either
 }
 
-#[derive(Clone,Debug)]
+#[derive(Clone,Debug,Serialize,Deserialize)]
 pub enum Mission {
     Arrival(Character),
     Matching,
@@ -126,7 +135,7 @@ pub enum Mission {
 
 pub type Contribution = i32;
 
-#[derive(PartialEq,Eq,Hash,Clone,Debug)]
+#[derive(PartialEq,Eq,Hash,Clone,Debug,Serialize,Deserialize)]
 pub enum Character {
     Adam,
     Eve,
@@ -145,11 +154,10 @@ impl Character {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub enum Sin {
     Prise(PriseKey),
-    FailedOffering(OfferingNum),
-    Turn
+    FailedOffering(OfferingNum)
 }
 
 impl Sin {
@@ -157,7 +165,6 @@ impl Sin {
         match self {
             Sin::Prise(_) => 2,
             Sin::FailedOffering(num) => num.usize(),
-            Sin::Turn => 1,
         }
     }
 }

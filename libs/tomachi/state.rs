@@ -1,15 +1,17 @@
 use rand::{Rng, prelude::SliceRandom};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 use crate::{model::*, settings::ActionList};
 use std::{collections::{HashMap}};
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub struct PlayingState {
     pub characters: HashMap<Character, CharacterState>,
     pub players: HashMap<Player,PlayerState>
 }
 
-#[derive(Debug)]
+#[derive(Debug,JsonSchema,Serialize,Deserialize)]
 pub enum MissionType {
     Arrival,Scrap,Others
 }
@@ -65,7 +67,7 @@ impl PlayingState {
 
 
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub enum CharacterState {
     Alive {
         sins: Vec<Sin>,
@@ -85,13 +87,13 @@ impl CharacterState {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub enum CharacterDecisions {
     Arraival { prises: bool },
     Scrap,
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Serialize,Deserialize)]
 pub struct PlayerState {
     pub mission: Mission,
     pub contribution: Contribution,
