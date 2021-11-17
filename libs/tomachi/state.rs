@@ -18,8 +18,8 @@ impl MissionType {
     pub fn missions(&self) -> Vec<Mission> {
         match self {
             MissionType::Arrival => Character::ALL.map(Mission::Arrival).into(),
-            MissionType::Scrap => [Mission::Matching,Mission::Prise].into(),
-            MissionType::Others => Character::ALL.map(Mission::Scrap).into(),
+            MissionType::Others => [Mission::Matching,Mission::Prise].into(),
+            MissionType::Scrap => Character::ALL.map(Mission::Scrap).into(),
         }
     }
 }
