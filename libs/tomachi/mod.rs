@@ -43,12 +43,12 @@ impl ExprocessCore for AppCore {
         AppState::Blank
     }
 
-    fn resolve(prev: &Self::State, command: &Self::Command) -> Self::Result {
+    fn resolve(prev: &Self::State, command: Self::Command) -> Self::Result {
         match (prev,command) {
             (AppState::Blank, AppCommand::Init(players_num,missions_num)) => {
                 let setting = AppSetting::new();
                 AppResult::CreatePlaying(Playing {
-                    state: PlayingState::new(*players_num,missions_num,&setting.actions, &mut thread_rng()),
+                    state: PlayingState::new(players_num,&missions_num,&setting.actions, &mut thread_rng()),
                     setting,
                 })
             },
@@ -56,7 +56,12 @@ impl ExprocessCore for AppCore {
         }
     }
 
-    fn reducer(prev: &mut Self::State, result: &Self::Result) {
-        todo!()
+    fn reducer(prev: &mut Self::State, result: Self::Result) {
+        *prev = match (&prev,result) {
+            (AppState::Blank, AppResult::CreatePlaying(playing)) => {
+                 AppState::Playing(playing)
+            },
+            (AppState::Playing(_), AppResult::CreatePlaying(_)) => panic!(),
+        };
     }
 }

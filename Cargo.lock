@@ -97,7 +97,7 @@ dependencies = [
 [[package]]
 name = "exprocess"
 version = "0.1.0"
-source = "git+https://github.com/itskihaga/exprocess-rust.git?tag=v0.0.1#e238f3dc21dff17554a7940e4d05579874a4cbf6"
+source = "git+https://github.com/itskihaga/exprocess-rust.git?tag=v0.0.2#59f626f21429d3566ec0d8ac9cf08f8b4d006e94"
 dependencies = [
  "uuid",
 ]
@@ -536,7 +536,7 @@ dependencies = [
 name = "tomachidomain"
 version = "0.1.0"
 dependencies = [
- "exprocess 0.1.0 (git+https://github.com/itskihaga/exprocess-rust.git?tag=v0.0.1)",
+ "exprocess 0.1.0 (git+https://github.com/itskihaga/exprocess-rust.git?tag=v0.0.2)",
  "rand 0.8.4",
  "rand_pcg",
 ]
